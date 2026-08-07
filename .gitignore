@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# Ortam/sır dosyaları
+.env
+*.key
+
+# Büyük veri (Git LFS ile yönetilecek, ileride)
+data/sentetik/*.png
+data/sentetik/*.jpg
+data/processed/*.bin
+
+# IDE
+.vscode/
+.idea/
+
+# İşletim sistemi
+.DS_Store
+Thumbs.db

@@ -1,0 +1,162 @@
+GÖREV: Resmî Yazışma Format Motoru — Şablon + Doğrulayıcı Sistemi
+
+BAĞLAM:
+TEKNOFEST 2026 Yapay Zeka Dil Ajanları Yarışması için, kamu kurumlarına
+gelen evrakları işleyip resmî yazı taslağı üreten çok ajanlı bir sistem
+geliştiriyoruz. Senin görevin, bu sistemin "biçim garantisi" katmanını
+inşa etmek: resmî yazıların biçimsel kurallarını bir yapay zeka
+modeline bırakmak yerine KODA sabitleyerek her zaman doğru çıkmasını
+garanti eden bir sistem.
+
+REPO YAPISI (bu depoda çalışıyorsun, klasörler zaten mevcut):
+- templates/   -> senin oluşturacağın Jinja2 şablonları
+- validators/  -> senin oluşturacağın doğrulama kodu
+- tests/       -> senin oluşturacağın testler
+- docs/format_kurallari_checklist.md -> aşağıdaki kaynak checklist zaten bu dosyada
+
+KAYNAK — ÇALIŞACAĞIN TEK REFERANS:
+Aşağıdaki checklist, Resmî Yazışmalarda Uygulanacak Usul ve Esaslar
+Hakkında Yönetmelik (RG 10.06.2020/31151, No. 2646) ve resmî Kılavuzun
+(Cumhurbaşkanlığı, 2022) analiz edilmesiyle oluşturuldu, madde
+numaralarıyla kaynaklıdır ve doğrulanmıştır. SADECE bunu kullan;
+kendi bilgine/hafızana güvenerek ek kural uydurma. "[TASARIM KARARI]"
+işaretli maddeler yönetmelik hükmü DEĞİLDİR, bizim ekip kararımızdır —
+kodda bunları ayrı ve açık şekilde yorum satırıyla işaretle.
+
+--- CHECKLIST BAŞLANGICI ---
+
+## 1. Sayı ve Tarih (Madde 11, 12)
+- Sayı: "Sayı:" başlığın son satırından 2 satır sonra, sol marj.
+- Format: [E|Z|O]-DETSİS_no-dosya_plan_kodu-kayıt_no (kısa çizgiyle
+  ayrılır). Örnek: E-67915368-903.07.02-4752
+- Tarih: sayı ile aynı satır, en sağda, GG.AA.YYYY (nokta ile) veya
+  harfle (10 Ekim 2019, işaretsiz).
+
+## 2. Konu (Madde 13)
+- "Sayı:"nın bir alt satırı, dikey orta hizayı geçmez, baş harfler
+  büyük, sonunda noktalama yok.
+
+## 3. Muhatap (Madde 14)
+- Konudan 2 satır sonra, sayfa ortalanarak.
+- Kurum: BÜYÜK HARF + yönelme eki (...'NA/'YE).
+- Gerçek kişi: "Sayın" + Ad (ilk harf büyük) SOYAD (büyük).
+- Çoklu muhatap: "DAĞITIM YERLERİNE".
+
+## 4. İlgi (Madde 15)
+- Muhataptan 2 satır sonra, sol marj.
+- "...tarihli ve ...sayılı..." kalıbı, sonunda nokta.
+
+## 5. Metin / Gövde (Madde 16)
+- İlgi varsa 1 satır, yoksa muhataptan 2 satır sonra başlar.
+- Paragraf 1,25 cm içeriden, iki yana hizalı, paragraflar arası
+  boşluk YOK.
+- Kısaltma: ilk kullanımda açık biçim + parantez içinde kısaltma.
+  [TASARIM KARARI] Bu kural sadece kurumsal/özel isim kısaltmalarına
+  (TBMM, KEP) uygulanır; yaygın genel kısaltmalar (vb., TL, m²) muaf.
+- Metin sonu (Madde 16/12):
+  - Alt makama -> "... rica ederim."
+  - Üst/aynı düzey makama -> "... arz ederim."
+  - Dağıtımlı (üst+alt karışık) -> "... arz ve rica ederim."
+  - Muhatap GERÇEK KİŞİ ise arz/rica KULLANILMAZ -> "Saygılarımla."
+    / "İyi dileklerimle." / "Bilgilerinize sunulur." (Madde 31/7
+    bunu destekler.)
+  - [TASARIM KARARI] Muhatap kurum ise ve hiyerarşi bilgisi yoksa
+    varsayılan: "arz ederim."
+
+## 6. İmza Bloğu (Madde 17)
+- Metin bitiminden 2-4 satır sonra, sağda ortalı.
+- Ad (ilk harf büyük) SOYAD (büyük) / altında Unvan.
+- Yetki devri: İmzalayan Ad Soyad / "[Makam] a." / imzalayanın unvanı.
+- Vekâlet: İmzalayan Ad Soyad / "[Makam] V.".
+- Çoklu imza: 2 kişi -> üst unvan sağda; 2+ kişi -> en üst solda,
+  soldan sağa sıralı.
+
+## 7. Ek Listesi (Madde 18)
+- İmza bölümünden sonra, sol marj.
+- [TASARIM KARARI] "Uygun satır boşluğu" = 2 satır.
+- Tek ek: "Ek: [ad] ([bilgi])". Çoklu ek: numaralandır, EK-1/EK-2
+  sağ üst köşede.
+- Sığmazsa: ayrı sayfa "EK LİSTESİ" başlığı, üst yazıda "Ek: Ek Listesi".
+- Ek yoksa: "Ek konulmadı" / "Ek-... konulmadı".
+
+## 8. Dağıtım Listesi (Madde 19)
+- Ek varsa sonrasında, yoksa imza sonrası, sol marj.
+- [TASARIM KARARI] Boşluk = 2 satır.
+- "Gereği:" altta; "Bilgi:" aynı satırda, ortaya doğru.
+- Sığmazsa: ayrı sayfa "DAĞITIM LİSTESİ".
+
+## 9. Yazı Türleri Arasındaki Farklar
+- Üst yazı: standart temel şablon.
+- Cevap yazısı: madde 35 (uygunsuz belgeye uyarı), madde 33 (süre:
+  belge talebi 5 iş günü, bilgi/görüş talebi 15 iş günü).
+- Tekit yazısı (Madde 34, Kılavuz Örnek 24): standart üst yazı +
+  Konu: "Tekit Yazısı" + İlgi ZORUNLU (önceki yazının tarih/sayısı) +
+  kısa metin ("...beş gün içinde cevap verilmesi... tekiden rica ederim.").
+- Bilgilendirme yazısı: AYRI BİÇİMSEL ŞABLONU YOK -- standart üst
+  yazı şablonunu kullanır. Tek fark imza yetkisinde (Bakan Yardımcısı
+  da imzalayabilir) -- bu format validator'ında ELE ALINMAYACAK,
+  ayrı bir TODO olarak kodda not düş.
+
+## 10. Sayfa Düzeni (Madde 6, 7, 8, 9, 10)
+- Kağıt: A4 (210x297 mm).
+- Kenar boşluğu: üst/sol/sağ 1,5 cm (logo varsa üst 0,5 cm).
+- Yazı tipi: Times New Roman 12pt veya Arial 11pt.
+- [TASARIM KARARI] Satır aralığı: 1.0 (tek satır).
+- [TASARIM KARARI] 9pt'a küçültme kuralı MVP'de UYGULANMAYACAK.
+- Başlık: 1. satır "T.C.", 2. satır idare adı BÜYÜK, 3. satır birim
+  adı (ilk harfler büyük).
+- Sayfa no: iletişim bilgisi altında, ortada, "1/2" formatında.
+- İletişim bilgisi: sol gönderen adresi, sağ irtibat kişisi, sayfa
+  altı, çizgiyle ayrılmış.
+- Çok sayfalı belge: sayı/tarih/konu/muhatap/ilgi SADECE ilk sayfada;
+  imza/ek/dağıtım SADECE son sayfada; iletişim+doğrulama HER sayfada.
+
+--- CHECKLIST SONU ---
+
+YAPMANI İSTEDİĞİM ADIMLAR (sırayla):
+
+1. Yukarıdaki checklist'i okuduktan sonra, kod yazmaya başlamadan
+   önce bana anladığın 3 yazı türü (üst yazı, cevap yazısı, tekit
+   yazısı -- bilgilendirme yazısı üst yazıyı kullanacak, ayrı şablon
+   YOK) için hangi alanları hangi şablonda tuttuğunu kısaca özetle.
+   Onayımı bekle.
+
+2. Onaydan sonra templates/ klasöründe 3 AYRI Jinja2 şablonu oluştur
+   (tek dosyada birleştirme):
+   - templates/ust_yazi.jinja2
+   - templates/cevap_yazisi.jinja2
+   - templates/tekit_yazisi.jinja2
+   Her şablon checklist'teki biçim kurallarına birebir uymalı.
+
+3. validators/format_validator.py dosyasında, HER kural için AYRI ve
+   KÜÇÜK bir Python fonksiyonu yaz (örnek: imza_blogu_dogru_mu(),
+   tarih_formati_dogru_mu(), ek_listesi_dogru_mu(), arz_rica_dogru_mu()).
+   Bunları tek dev fonksiyonda birleştirme. En sonda hepsini çalıştırıp
+   sonuçları toplayan validate_format(taslak_metni, yazi_turu)
+   fonksiyonu yaz.
+
+4. tests/test_format_validator.py dosyasında, her kural fonksiyonu
+   için hem "doğru" hem "hatalı" birer örnek taslak kullanarak pytest
+   testleri yaz.
+
+5. templates/README.md dosyasında kısa kurulum/çalıştırma talimatı
+   ve [TASARIM KARARI] işaretli 6 maddenin listesini (checklist'teki
+   özet tablo) tekrar yaz -- bu, jüri sorularına hazırlık için önemli.
+
+KESİN KISITLAR (bunları yapma):
+- Kenar boşluğu, font gibi sabit görsel parametreler için ayrı bir
+  config dosyası AÇMA -- doğrudan şablonlara göm.
+- Biçim doğrulamasını bir LLM/AI çağrısına YAPTIRMA -- tamamen
+  deterministik, kod-tabanlı olmalı.
+- Karmaşık bir kural motoru/DSL kurma -- sade Python fonksiyonları
+  yeterli.
+- Checklist'te olmayan hiçbir kuralı uydurma; emin olmadığın noktada
+  bana sor.
+- "Çift kayıt numarası" gibi checklist'te YER ALMAYAN hiçbir kuralı
+  ekleme -- bu bilinçli olarak dışarıda bırakıldı (güncel olmayan
+  kaynak).
+
+TESLİM KONTROLÜ:
+İşin bitince pytest tests/ çalıştırıldığında tüm testler geçmeli.
+Bana hangi [TASARIM KARARI] maddelerini nerede kodladığını ve
+bilgilendirme yazısı TODO'sunu nereye not düştüğünü özetle.
