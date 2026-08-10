@@ -61,25 +61,71 @@ ve hiçbir zaman `Enum` veya `Literal` yapılmamalıdır:
 | `YonlendirmeKarari.onerilen_birim_id` | Birim ID'leri tamamen kurum-özel; Pipeline 4'ün ürettiği config'e aittir. |
 
 Bu üç alanın gerçek değer kümesi **Pipeline 4 (Kurum Config)** tarafından
-`data/config/kurum_profili_kaymakamlik.yaml` dosyasında tanımlanacaktır.
-Bu dosya henüz merge edilmemiş paralel bir branch'te geliştirilmektedir.
+`data/config/kurum_profili_kaymakamlik.yaml` dosyasında tanımlanmıştır ve
+bu dosya artık bu repoda mevcuttur.
 
 ---
 
-## Pipeline 3/4 Merge Sonrası Yapılacaklar
+## Pipeline 3/4 Çapraz Kontrol Sonuçları
 
-> **ÖNEMLİ:** Pipeline 3 (Mevzuat Korpusu) ve Pipeline 4 (Kurum Config)
-> bu branch'e merge edildiğinde aşağıdaki çapraz kontroller yapılmalıdır:
+> **Durum (2026-08-10):** Pipeline 3 ve Pipeline 4 merge edilmiştir.
+> Aşağıdaki çapraz kontroller `data/config/kurum_profili_kaymakamlik.yaml`
+> ve `docs/kaynak_referanslari.md` dosyaları gerçekten okunarak yapılmıştır.
 
-1. `evrak_turu` alanında kullanılan string değerlerin `kurum_profili.yaml`
-   içindeki `evrak_turleri` listesiyle tutarlılığını doğrula.
-2. `yazi_turu` alanında kullanılan string değerlerin `kurum_profili.yaml`
-   içindeki `sablon_haritasi` anahtarlarıyla eşleştiğini doğrula.
-3. `YonlendirmeKarari.onerilen_birim_id` değerlerinin `kurum_profili.yaml`
-   içindeki `birimler` listesinde bulunduğunu doğrula.
-4. `MevzuatEslesme.kaynak_dokuman` formatının Pipeline 3 çıktısıyla
-   uyumlu olduğunu doğrula.
+### a) `evrak_turu` ↔ `kurum_profili.yaml / evrak_turleri[*].id`
 
-> **NOT:** `data/config/kurum_profili_kaymakamlik.yaml` ve
-> `docs/kaynak_referanslari.md` dosyaları bu branch'te mevcut değildir —
-> bunlar Pipeline 3/4'ün paralel branch'inde geliştiriliyor. Bu normaldir.
+✅ **Tutarlı.** YAML'da tanımlı `evrak_turleri` id'leri:
+
+| id | Açıklama |
+|---|---|
+| `dilekce` | Vatandaş Dilekçesi (3071 sayılı Kanun) |
+| `bilgi_edinme` | Bilgi Edinme Başvurusu (4982 sayılı Kanun) |
+| `kurumlar_arasi_yazi` | Kurumlar Arası Resmî Yazışma |
+| `ihale_itirazi` | İhale İtiraz/Şikayet Dilekçesi |
+| `sosyal_yardim_basvuru` | Sosyal Yardım Başvurusu |
+| `tapu_kadastro_basvuru` | Tapu/Kadastro İşlem Başvurusu |
+
+`EvrakState.evrak_turu` alanı bu id'leri doğrudan string olarak alabilir.
+Sınıflandırma düğümü bu listeyi çalışma zamanında config'den okuyacaktır.
+
+### b) `yazi_turu` ↔ `kurum_profili.yaml / yazi_turleri[*].id`
+
+✅ **Tutarlı.** ~~`sablon_haritasi`~~ — bu anahtar **YAML'da yoktur**; yapı düzeltildi.
+Gerçek yapı: `yazi_turleri` listesinin her öğesinde `id` ve `sablon` alanları bulunur.
+
+| `yazi_turu` id | Şablon (`sablon` alanı) |
+|---|---|
+| `ust_yazi` | `templates/ust_yazi.jinja2` |
+| `cevap_yazisi` | `templates/cevap_yazisi.jinja2` |
+| `bilgilendirme_yazisi` | `templates/ust_yazi.jinja2` (Tasarım Kararı #6) |
+| `tekit_yazisi` | `templates/tekit_yazisi.jinja2` |
+
+`EvrakState.yazi_turu` alanı bu dört id'den birini alır; şablon seçimi
+Taslaklama düğümü tarafından `yazi_turleri[*].sablon` alanından yapılır.
+
+### c) `onerilen_birim_id` ↔ `kurum_profili.yaml / birimler[*].id`
+
+✅ **Tutarlı.** YAML'da tanımlı `birimler` id'leri (9 adet):
+
+`yazi_isleri` · `nufus` · `sydv` · `milli_egitim` · `saglik` ·
+`mal_mudurlugu` · `tapu` · `tarim` · `emniyet`
+
+`YonlendirmeKarari.onerilen_birim_id` alanı bu id'lerden birini alır.
+Kural Motoru düğümü, eşleştirme için `birimler[*].anahtar_kelimeler` listesini kullanır.
+
+### d) `MevzuatEslesme.kaynak_dokuman` ↔ `data/raw/mevzuat/` dosya adları
+
+✅ **Tutarlı.** `docs/kaynak_referanslari.md` incelendi. `data/raw/mevzuat/`
+içindeki dosyalar ve önerilen `kaynak_dokuman` değerleri:
+
+| Dosya adı | Önerilen `kaynak_dokuman` değeri |
+|---|---|
+| `resmi_yazisma_yonetmeligi.pdf` | `"resmi_yazisma_yonetmeligi"` |
+| `resmi_yazisma_kilavuzu.pdf` | `"resmi_yazisma_kilavuzu"` |
+| `3071_dilekce_hakki_kanunu.pdf` | `"3071_dilekce_hakki_kanunu"` |
+| `4982_bilgi_edinme_kanunu.pdf` | `"4982_bilgi_edinme_kanunu"` |
+| `5442_il_idaresi_kanunu.pdf` | `"5442_il_idaresi_kanunu"` |
+
+`kaynak_dokuman` alanı serbest `str` olduğundan zorunlu bir format kısıtı
+yoktur; ancak dosya adı tabanlı isimlendirme (`.pdf` uzantısı olmadan)
+önerilen konvansiyondur — Mevzuat RAG düğümü bu formatı benimsemelidir.
