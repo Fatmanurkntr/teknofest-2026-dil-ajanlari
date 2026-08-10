@@ -7,11 +7,11 @@ Demo kurum profili: Örenli İlçe Kaymakamlığı (kurgusal).
 
 | Klasör | Hangi Faz 0 pipeline'ı | Durum |
 |---|---|---|
-| `schemas/` | Pipeline 1 — Arayüz Şeması | ✅ Tamamlandı |
+| `schemas/` | Pipeline 1 — Arayüz Şeması | Başlanmadı |
 | `templates/`, `validators/`, `tests/` | Pipeline 2 — Format Motoru (şablon + doğrulama) | ✅ Tamamlandı |
 | `renderers/` | Pipeline 2 — Format Motoru (render katmanı) | ✅ Tamamlandı |
 | `data/raw/mevzuat/` | Pipeline 3 — Mevzuat Korpusu Toplama | Başlanmadı |
-| `data/config/` | Pipeline 4 — Kurum Config | Başlanmadı |
+| `data/config/` | Pipeline 4 — Kurum Config | ✅ Tamamlandı |
 | `docs/` | Ortak dokümantasyon | — |
 | `data/processed/` | Faz 1 (mevzuat işleme) | İleride |
 | `data/sentetik/` | Faz 2 (sentetik veri üretimi) | İleride |
@@ -21,10 +21,10 @@ Demo kurum profili: Örenli İlçe Kaymakamlığı (kurgusal).
 
 | # | Pipeline | Durum |
 |---|---|---|
-| 1 | Arayüz Şeması (JSON Sözleşmesi) | ✅ Tamamlandı |
+| 1 | Arayüz Şeması (JSON Sözleşmesi) | Başlanmadı |
 | 2 | Format Motoru | ✅ Tamamlandı |
-| 3 | Mevzuat Korpusu Toplama | Başlanmadı |
-| 4 | Kurum Config (Kaymakamlık) | Başlanmadı |
+| 3 | Mevzuat Korpusu Toplama | ✅ Tamamlandı |
+| 4 | Kurum Config (Kaymakamlık) | ✅ Tamamlandı |
 
 ## Lisans
 
