@@ -10,8 +10,8 @@ Demo kurum profili: Örenli İlçe Kaymakamlığı (kurgusal).
 | `schemas/` | Pipeline 1 — Arayüz Şeması | ✅ Tamamlandı |
 | `templates/`, `validators/`, `tests/` | Pipeline 2 — Format Motoru (şablon + doğrulama) | ✅ Tamamlandı |
 | `renderers/` | Pipeline 2 — Format Motoru (render katmanı) | ✅ Tamamlandı |
-| `data/raw/mevzuat/` | Pipeline 3 — Mevzuat Korpusu Toplama | Başlanmadı |
-| `data/config/` | Pipeline 4 — Kurum Config | Başlanmadı |
+| `data/raw/mevzuat/` | Pipeline 3 — Mevzuat Korpusu Toplama | ✅ Tamamlandı |
+| `data/config/` | Pipeline 4 — Kurum Config | ✅ Tamamlandı |
 | `docs/` | Ortak dokümantasyon | — |
 | `data/processed/` | Faz 1 (mevzuat işleme) | İleride |
 | `data/sentetik/` | Faz 2 (sentetik veri üretimi) | İleride |
@@ -23,8 +23,12 @@ Demo kurum profili: Örenli İlçe Kaymakamlığı (kurgusal).
 |---|---|---|
 | 1 | Arayüz Şeması (JSON Sözleşmesi) | ✅ Tamamlandı |
 | 2 | Format Motoru | ✅ Tamamlandı |
-| 3 | Mevzuat Korpusu Toplama | Başlanmadı |
-| 4 | Kurum Config (Kaymakamlık) | Başlanmadı |
+| 3 | Mevzuat Korpusu Toplama | ✅ Tamamlandı |
+| 4 | Kurum Config (Kaymakamlık) | ✅ Tamamlandı |
+
+> **Denetim notu (2026-08-10):** Tüm pipeline dosyaları tek tek doğrulandı.
+> `python -m pytest -v` → **158 test, 158 geçti, 0 başarısız.**
+> Çözülmemiş merge çakışma işareti yok; yinelenen dosya yok.
 
 ## Lisans
 
