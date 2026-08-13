@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 from collections import Counter
 
-JSONL_PATH = Path(__file__).parent / "evraklar.jsonl"
+JSONL_PATH = Path(__file__).parent.parent / "data" / "sentetik" / "evraklar.jsonl"
 
 GECERLI_EVRAK_TURLERI = {
     "dilekce",
