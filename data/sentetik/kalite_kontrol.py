@@ -40,6 +40,11 @@ SABIT_KALIP = (
     "veya belgeler aşağıda belirtilmiştir. Gereğini arz ederim."
 )
 
+MOJIBAKE_ISARETLER = ["Ã–", "Ä°", "Ã‡", "ÅŸ", "Äž", "Ã¼", "Ã¶", "Ä±", "Ã§", "Ãœ", "Ã", "â€", "â€˜", "Ã¢"]
+
+def mojibake_tespiti(metin: str) -> bool:
+    return any(iz in metin for iz in MOJIBAKE_ISARETLER)
+
 def dogrula():
     satirlar = JSONL_PATH.read_text(encoding="utf-8").strip().splitlines()
     kayitlar = []
@@ -102,9 +107,19 @@ def dogrula():
     for h in kalip_hatalar:
         print(h)
 
+    # 5. Mojibake Kontrolü
+    mojibake_hatalar = []
+    for k in kayitlar:
+        metin = json.dumps(k, ensure_ascii=False)
+        if mojibake_tespiti(metin):
+            mojibake_hatalar.append(f"  {k.get('id', 'Bilinmeyen ID')}: mojibake karakterleri tespit edildi")
+    print(f"\n[5] Mojibake kontrolü: {len(mojibake_hatalar)} hata")
+    for h in mojibake_hatalar:
+        print(h)
+
     # Sonuç
     print()
-    toplam_hata = len(parse_hatalari) + len(tur_hatalar) + len(birim_hatalar) + len(kalip_hatalar)
+    toplam_hata = len(parse_hatalari) + len(tur_hatalar) + len(birim_hatalar) + len(kalip_hatalar) + len(mojibake_hatalar)
     if toplam_hata == 0:
         print("TUM KONTROLLER BASARILI -- 0 hata")
     else:
